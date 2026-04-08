@@ -5,13 +5,13 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        {/* PAKSA HISTATS JALAN DI DALAM HEAD (Paling Pertama) */}
+        {/* Histats.com START (aync) - ID: 5019431 */}
         <script 
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
               var _Hasync= _Hasync|| [];
-              _Hasync.push(['Histats.start', '1,5013673,4,0,0,0,00010000']);
+              _Hasync.push(['Histats.start', '1,5019431,4,0,0,0,00010000']);
               _Hasync.push(['Histats.fasi', '1']);
               _Hasync.push(['Histats.track_hits', '']);
               (function() {
@@ -25,6 +25,13 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
 
       <Component {...pageProps} />
+
+      {/* Noscript Fallback */}
+      <noscript>
+        <a href="/" target="_blank">
+          <img src="//sstatic1.histats.com/0.gif?5019431&101" alt="histats" border="0" />
+        </a>
+      </noscript>
     </>
   )
 }
