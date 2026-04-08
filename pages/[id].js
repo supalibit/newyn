@@ -12,7 +12,18 @@ export default function Player() {
   useEffect(() => {
     if (!id) return;
 
-    // 1. DETEKSI ADBLOCK
+    // 1. LOGIKA GANTIAN 2 AKUN ADSTERRA (50:50)
+    const script = document.createElement('script');
+    
+    const iklanAkun1 = "https://pl29098896.profitablecpmratenetwork.com/2f/c9/cf/2fc9cf2cac8df8cdcc6412ebb68d21cb.js";
+  
+    const iklanAkun2 = "https://evidentbummerhike.com/e4/6a/bf/e46abf385099c2b5d894dbb1c522e30c.js"; 
+
+    script.src = Math.random() < 0.5 ? iklanAkun1 : iklanAkun2;
+    script.async = true;
+    document.body.appendChild(script);
+
+    // 2. DETEKSI ADBLOCK
     const checkAdBlock = async () => {
       const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
       try {
@@ -24,7 +35,7 @@ export default function Player() {
     };
     checkAdBlock();
 
-    // 2. AMBIL JUDUL VIDEO SAJA (Tanpa simpan stats)
+    // 3. AMBIL JUDUL VIDEO
     const fetchVideoInfo = async () => {
       const { data } = await supabase.from('videos1').select('title').eq('videy_id', id).single();
       if (data) document.title = data.title;
@@ -35,6 +46,9 @@ export default function Player() {
 
     return () => {
       localStorage.removeItem('download_step');
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, [id]);
 
@@ -52,7 +66,6 @@ export default function Player() {
       const randomIndex = Math.floor(Math.random() * affiliateLinks.length);
       window.open(affiliateLinks[randomIndex], '_blank');
     } else {
-      // PERBAIKAN: Menggunakan cdn2 untuk download
       window.location.href = `https://cdn2.videy.co/${id}.mp4`;
       localStorage.setItem('download_step', '0');
     }
@@ -74,7 +87,7 @@ export default function Player() {
         }
       `}</style>
 
-      <Script src="https://pl28763278.effectivegatecpm.com/ee/04/09/ee040951564d0118f9c97849ba692abb.js" strategy="afterInteractive" />
+      {/* Script Iklan sudah dipindah ke useEffect di atas agar bisa gantian secara otomatis */}
 
       {adBlockDetected && (
         <div style={{
@@ -113,7 +126,6 @@ export default function Player() {
             preload="metadata"
             playsInline
           >
-            {/* PERBAIKAN: Menggunakan cdn2 untuk player */}
             <source src={`https://cdn2.videy.co/${id}.mp4`} type="video/mp4" />
           </video>
         </div>
