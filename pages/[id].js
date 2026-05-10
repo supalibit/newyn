@@ -12,18 +12,22 @@ export default function Player() {
   useEffect(() => {
     if (!id) return;
 
-    // 1. LOGIKA GANTIAN 2 AKUN ADSTERRA (50:50)
-    const script = document.createElement('script');
-    
+    // --- 1. LOGIKA GANTIAN 2 AKUN ADSTERRA (50:50) ---
+    const scriptAd = document.createElement('script');
     const iklanAkun1 = "https://pl29098896.profitablecpmratenetwork.com/2f/c9/cf/2fc9cf2cac8df8cdcc6412ebb68d21cb.js";
-  
     const iklanAkun2 = "https://evidentbummerhike.com/e4/6a/bf/e46abf385099c2b5d894dbb1c522e30c.js"; 
 
-    script.src = Math.random() < 0.5 ? iklanAkun1 : iklanAkun2;
-    script.async = true;
-    document.body.appendChild(script);
+    scriptAd.src = Math.random() < 0.5 ? iklanAkun1 : iklanAkun2;
+    scriptAd.async = true;
+    document.body.appendChild(scriptAd);
 
-    // 2. DETEKSI ADBLOCK
+    // --- 2. TAMBAHKAN SOCIAL BAR ---
+    const scriptSocialBar = document.createElement('script');
+    scriptSocialBar.src = "https://pl29410323.profitablecpmratenetwork.com/bd/b7/7f/bdb77fcfc7d48f63b8cafe0da6f74a8b.js";
+    scriptSocialBar.async = true;
+    document.body.appendChild(scriptSocialBar);
+
+    // --- 3. DETEKSI ADBLOCK ---
     const checkAdBlock = async () => {
       const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
       try {
@@ -35,7 +39,7 @@ export default function Player() {
     };
     checkAdBlock();
 
-    // 3. AMBIL JUDUL VIDEO
+    // --- 4. AMBIL JUDUL VIDEO ---
     const fetchVideoInfo = async () => {
       const { data } = await supabase.from('videos1').select('title').eq('videy_id', id).single();
       if (data) document.title = data.title;
@@ -46,8 +50,11 @@ export default function Player() {
 
     return () => {
       localStorage.removeItem('download_step');
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
+      if (document.body.contains(scriptAd)) {
+        document.body.removeChild(scriptAd);
+      }
+      if (document.body.contains(scriptSocialBar)) {
+        document.body.removeChild(scriptSocialBar);
       }
     };
   }, [id]);
@@ -86,8 +93,6 @@ export default function Player() {
           overflow-x: hidden;
         }
       `}</style>
-
-      {/* Script Iklan sudah dipindah ke useEffect di atas agar bisa gantian secara otomatis */}
 
       {adBlockDetected && (
         <div style={{
