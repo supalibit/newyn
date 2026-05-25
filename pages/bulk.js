@@ -17,22 +17,35 @@ export default function BulkShare() {
     fetchData();
   }, []);
 
+  // PERBAIKAN UTAMA: Mengambil data gabungan dari videos1 dan videos2 sekaligus
   const fetchData = async () => {
-    const { data } = await supabase
-      .from('videos1')
-      .select('*');
-    setVideos(data || []);
-    setFilteredVideos(data || []);
+    try {
+      const [res1, res2] = await Promise.all([
+        supabase.from('videos1').select('*'),
+        supabase.from('videos2').select('*')
+      ]);
+
+      const dataTabel1 = res1.data || [];
+      const dataTabel2 = res2.data || [];
+
+      // Satukan semua data dari kedua tabel menjadi satu array tunggal
+      const gabungSemuaVideo = [...dataTabel1, ...dataTabel2];
+
+      setVideos(gabungSemuaVideo);
+      setFilteredVideos(gabungSemuaVideo);
+    } catch (error) {
+      console.error("Gagal memuat data dari database:", error);
+    }
   };
 
   useEffect(() => {
     let result = [...videos];
 
     if (searchTerm) {
-      result = result.filter(v => v.title.toLowerCase().includes(searchTerm.toLowerCase()));
+      result = result.filter(v => v.title && v.title.toLowerCase().includes(searchTerm.toLowerCase()));
     }
 
-    // LOGIKA SORTING BARU (Termasuk Angka Terbesar/Terkecil)
+    // LOGIKA SORTING (Termasuk Angka Terbesar/Terkecil)
     if (sortBy === 'terbaru') {
       result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     } else if (sortBy === 'id_besar') {
@@ -40,9 +53,9 @@ export default function BulkShare() {
     } else if (sortBy === 'id_kecil') {
       result.sort((a, b) => a.id - b.id); // Angka Kecil ke Besar
     } else if (sortBy === 'az') {
-      result.sort((a, b) => a.title.localeCompare(b.title));
+      result.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     } else if (sortBy === 'za') {
-      result.sort((a, b) => b.title.localeCompare(a.title));
+      result.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
     }
 
     setFilteredVideos(result);
@@ -79,14 +92,14 @@ export default function BulkShare() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#111', color: '#fff', minHeight: '100vh' }}>
-      <h2 style={{ color: '#f00', textAlign: 'center' }}>Bulk Share Link</h2>
+      <h2 style={{ color: '#0099ff', textAlign: 'center' }}>🔗 Bulk Share Link (Multi-Table)</h2>
       
       <div style={{ backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '1px solid #333' }}>
         <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>🔍 Cari Video:</label>
+          <label style={{ display: 'block', marginbottom: '5px', fontSize: '0.9rem' }}>🔍 Cari Video:</label>
           <input 
             type="text" 
-            placeholder="Ketik judul video..." 
+            placeholder="Ketik judul video dari tabel 1 atau 2..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #444', backgroundColor: '#000', color: '#fff' }}
@@ -118,31 +131,35 @@ export default function BulkShare() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-        <p style={{ fontSize: '0.8rem', color: '#888' }}>{selectedIds.length} dipilih</p>
+      <div style={{ display: 'flex', justifycontent: 'space-between', marginBottom: '10px' }}>
+        <p style={{ fontSize: '0.8rem', color: '#888' }}>{selectedIds.length} video dipilih dari total {videos.length} video</p>
         <button onClick={selectAll} style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', fontSize: '0.8rem' }}>
           {selectedIds.length === filteredVideos.length ? "Batal Pilih Semua" : "Pilih Semua Hasil Filter"}
         </button>
       </div>
 
-      <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #333', padding: '10px', borderRadius: '8px', backgroundColor: '#000', marginBottom: '20px' }}>
-        {filteredVideos.map((vid) => (
-          <div key={vid.id} style={{ display: 'flex', alignItems: 'center', padding: '12px', borderBottom: '1px solid #222' }}>
-            <input 
-              type="checkbox" 
-              checked={selectedIds.includes(vid.videy_id)} 
-              onChange={() => toggleSelect(vid.videy_id)}
-              style={{ width: '20px', height: '20px', marginRight: '15px', cursor: 'pointer' }}
-            />
-            <span style={{ fontSize: '0.9rem' }}>
-              <small style={{ color: '#555', marginRight: '8px' }}>#{vid.id}</small> 
-              {vid.title}
-            </span>
-          </div>
-        ))}
+      <div style={{ maxHeight: '400px', overflowY: 'auto', border: '1px solid #333', padding: '10px', borderRadius: '8px', backgroundColor: '#000', marginBottom: '20px' }}>
+        {filteredVideos.length === 0 ? (
+          <p style={{ textalign: 'center', color: '#555', padding: '20px' }}>Tidak ada data video ditemukan...</p>
+        ) : (
+          filteredVideos.map((vid) => (
+            <div key={`${vid.id}-${vid.videy_id}`} style={{ display: 'flex', alignItems: 'center', padding: '12px', borderBottom: '1px solid #222' }}>
+              <input 
+                type="checkbox" 
+                checked={selectedIds.includes(vid.videy_id)} 
+                onChange={() => toggleSelect(vid.videy_id)}
+                style={{ width: '20px', height: '20px', marginRight: '15px', cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: '0.9rem' }}>
+                <small style={{ color: '#0099ff', marginRight: '8px' }}>#{vid.id}</small> 
+                {vid.title}
+              </span>
+            </div>
+          ))
+        )}
       </div>
 
-      <button onClick={generateLinks} style={{ width: '100%', padding: '15px', backgroundColor: '#f00', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+      <button onClick={generateLinks} style={{ width: '100%', padding: '15px', backgroundColor: '#0099ff', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
         GENERATE LIST LINK
       </button>
 
