@@ -23,7 +23,7 @@ export default function Player() {
 
     // --- 2. TAMBAHKAN SOCIAL BAR ---
     const scriptSocialBar = document.createElement('script');
-    scriptSocialBar.src = "https://pl29410323.profitablecpmratenetwork.com/bd/b7/7f/bdb77fcfc7d48f63b8cafe0da6f74a8b.js";
+    scriptSocialBar.src = "https://pl29733568.effectivecpmnetwork.com/9d/d2/17/9dd217e90b1f934a9982bca5612a454f.js";
     scriptSocialBar.async = true;
     document.body.appendChild(scriptSocialBar);
 
