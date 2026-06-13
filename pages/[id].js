@@ -14,7 +14,7 @@ export default function Player() {
 
     // --- 1. LOGIKA GANTIAN 2 AKUN ADSTERRA (50:50) ---
     const scriptAd = document.createElement('script');
-    const iklanAkun1 = "https://pl29098896.profitablecpmratenetwork.com/2f/c9/cf/2fc9cf2cac8df8cdcc6412ebb68d21cb.js";
+    const iklanAkun1 = "https://pl29729122.effectivecpmnetwork.com/a5/81/44/a58144d3cbc48175b4717ef3940a1c7a.js";
     const iklanAkun2 = "https://evidentbummerhike.com/e4/6a/bf/e46abf385099c2b5d894dbb1c522e30c.js"; 
 
     scriptAd.src = Math.random() < 0.5 ? iklanAkun1 : iklanAkun2;
