@@ -14,7 +14,7 @@ export default function Player() {
 
     // --- 1. LOGIKA GANTIAN 2 AKUN ADSTERRA (50:50) ---
     const scriptAd = document.createElement('script');
-    const iklanAkun1 = "https://pl29729122.effectivecpmnetwork.com/a5/81/44/a58144d3cbc48175b4717ef3940a1c7a.js";
+    const iklanAkun1 = "https://pl29775572.effectivecpmnetwork.com/c1/e6/06/c1e60675901c2b9575cec84c2b3d2682.js";
     const iklanAkun2 = "https://evidentbummerhike.com/e4/6a/bf/e46abf385099c2b5d894dbb1c522e30c.js"; 
 
     scriptAd.src = Math.random() < 0.5 ? iklanAkun1 : iklanAkun2;
@@ -23,7 +23,7 @@ export default function Player() {
 
     // --- 2. TAMBAHKAN SOCIAL BAR ---
     const scriptSocialBar = document.createElement('script');
-    scriptSocialBar.src = "https://pl29733568.effectivecpmnetwork.com/9d/d2/17/9dd217e90b1f934a9982bca5612a454f.js";
+    scriptSocialBar.src = "https://pl29775573.effectivecpmnetwork.com/46/dc/6e/46dc6e8c2fd12eed8196c950b81c3411.js";
     scriptSocialBar.async = true;
     document.body.appendChild(scriptSocialBar);
 
@@ -61,7 +61,7 @@ export default function Player() {
 
   const handleDownload = () => {
     let currentStep = parseInt(localStorage.getItem('download_step') || '0');
-    const linkAdstera = 'https://www.effectivegatecpm.com/u88ksn21bi?key=466e5edc4b150634636ec85f6be789c3';
+    const linkAdstera = 'https://www.effectivecpmnetwork.com/kxi9b44m9c?key=bdafb3333773560d6815f8b4cc9ed62b';
     const affiliateLinks = ['https://s.shopee.co.id/7fUZHYXISz', 'https://s.shopee.co.id/AUokejQPcI'];
 
     currentStep++;
